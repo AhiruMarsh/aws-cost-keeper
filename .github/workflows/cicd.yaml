@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
  
 env: 
-  TEMPLATE_FILE: template.yml
+  TEMPLATE_FILE: template.yaml
 
 jobs:
   CICD:
