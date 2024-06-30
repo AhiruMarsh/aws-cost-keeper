@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: notify-aws-cost
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: notify-aws-cost
+  DiscordWebhookURL:
+    Type: String
+
+Globals:
+  Function:
+    Timeout: 10
+
+Resources:
+  Function01:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Ref ProjectName
+      Description: !Ref ProjectName 
+      CodeUri: app/
+      Handler: main.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Variables:
+        AWS_BUDGET_NAME: !Ref Budget01
+        DISCORD_WEBHOOK_URL: !Ref DiscordWebhookURL
+      Policies:
+        - AWSBillingReadOnlyAccess
+      Events:
+        Events:
+          Type: Schedule
+          Properties:
+            Schedule: cron(5 0 * * ? *)
+            Name: !Sub "${ProjectName}-Schedule"
+            Enabled: True
+      PropagateTags: true
+
+  Function01LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Function01}"
+      RetentionInDays: 30
+
+  Budget01:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: !Sub "${ProjectName}-CostBudget"
+        BudgetType: COST
+        TimeUnit: MONTHLY
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  HelloWorldApi:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  HelloWorldFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt HelloWorldFunction.Arn
+  HelloWorldFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt HelloWorldFunctionRole.Arn
