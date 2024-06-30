@@ -24,18 +24,20 @@ Resources:
       Runtime: python3.12
       Architectures:
         - x86_64
-      Variables:
-        AWS_BUDGET_NAME: !Ref Budget
-        DISCORD_WEBHOOK_URL: !Ref DiscordWebhookURL
+      Environment: 
+        Variables:
+          AWS_BUDGET_NAME: !Ref Budget
+          DISCORD_WEBHOOK_URL: !Ref DiscordWebhookURL
       Policies:
         - AWSLambdaBasicExecutionRole
         - AWSBillingReadOnlyAccess
       Events:
-        Type: ScheduleV2
-        Properties:
-          Name: !Sub "${ProjectName}-Schedule"
-          ScheduleExpression: cron(5 0 * * ? *)
-          State: ENABLED
+        Scheduled:
+          Type: ScheduleV2
+          Properties:
+            Name: !Sub "${ProjectName}-Schedule"
+            ScheduleExpression: cron(5 0 * * ? *)
+            State: ENABLED
       PropagateTags: true
 
   FunctionLogGroup:
