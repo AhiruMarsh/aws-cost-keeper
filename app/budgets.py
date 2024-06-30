@@ -7,12 +7,16 @@ class AwsBudgets:
         self._account_id  = account_id
         self._budget_name = budget_name
 
-        self._client   = boto3.client('budgets')
-        self._response = self._client.describe_budget(
-            AccountId=self._account_id,
-            BudgetName=self._budget_name,
-        )
-    
+        # テスト等では読み取ることができないため、Noneを返す
+        self._client = boto3.client('budgets')
+        try:
+            self._response = self._client.describe_budget(
+                AccountId=self._account_id,
+                BudgetName=self._budget_name,
+            )
+        except Exception as e:
+            self._response = None
+
     def get_actual_cost(self) -> str:
         """ 今月の実績値を取得 """
         try:

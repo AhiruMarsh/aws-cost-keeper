@@ -14,7 +14,7 @@ Globals:
     Timeout: 10
 
 Resources:
-  Function01:
+  Function:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Ref ProjectName
@@ -25,7 +25,7 @@ Resources:
       Architectures:
         - x86_64
       Variables:
-        AWS_BUDGET_NAME: !Ref Budget01
+        AWS_BUDGET_NAME: !Ref Budget
         DISCORD_WEBHOOK_URL: !Ref DiscordWebhookURL
       Policies:
         - AWSBillingReadOnlyAccess
@@ -38,30 +38,16 @@ Resources:
             Enabled: True
       PropagateTags: true
 
-  Function01LogGroup:
+  FunctionLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub "/aws/lambda/${Function01}"
+      LogGroupName: !Sub "/aws/lambda/${Function}"
       RetentionInDays: 30
 
-  Budget01:
+  Budget:
     Type: AWS::Budgets::Budget
     Properties:
       Budget:
         BudgetName: !Sub "${ProjectName}-CostBudget"
         BudgetType: COST
         TimeUnit: MONTHLY
-
-Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
