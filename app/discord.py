@@ -7,7 +7,6 @@ class Discord:
         """ DiscordにWebhookでメッセージを飛ばすクラス （要: Webhook URL, BOT名, BOT画像） """
         self._webhook_url = webhook_url
         self._username    = username
-        self._avatar_url  = avatar_url
 
         # BOT画像の指定が無い場合は、以下のリストからランダムで選択する
         if (avatar_url == None):
@@ -23,6 +22,8 @@ class Discord:
             AVATAR_INIT_DICE = random.randrange(len(AVATAR_INIT_URL))
             
             self._avatar_url = AVATAR_INIT_URL[AVATAR_INIT_DICE]
+        else:
+            self._avatar_url  = avatar_url
 
     def send_text(self, content: str) -> int:
         """ テキスト送信 （要: テキスト） """
@@ -37,4 +38,4 @@ class Discord:
         except requests.exceptions.RequestException as e:
             raise
         
-        return r.status_code
+        return int(r.status_code)
