@@ -38,7 +38,7 @@ jobs:
         continue-on-error: true
         run: |
           pip install -r ../requirements.txt -q
-          pytest -v --cov --cov-branch --cov-report=html test_main.py
+          pytest -v test_main.py
         env:
           AWS_BUDGET_NAME: "notify-aws-cost-CostBudget"
           DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL_TEST }}
