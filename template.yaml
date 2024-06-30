@@ -28,14 +28,14 @@ Resources:
         AWS_BUDGET_NAME: !Ref Budget
         DISCORD_WEBHOOK_URL: !Ref DiscordWebhookURL
       Policies:
+        - AWSLambdaBasicExecutionRole
         - AWSBillingReadOnlyAccess
       Events:
-        Events:
-          Type: Schedule
-          Properties:
-            Schedule: cron(5 0 * * ? *)
-            Name: !Sub "${ProjectName}-Schedule"
-            Enabled: True
+        Type: ScheduleV2
+        Properties:
+          Name: !Sub "${ProjectName}-Schedule"
+          ScheduleExpression: cron(5 0 * * ? *)
+          State: ENABLED
       PropagateTags: true
 
   FunctionLogGroup:
