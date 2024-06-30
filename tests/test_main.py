@@ -2,10 +2,9 @@
 import os
 import sys
 
-sys.path.append(os.environ["REPOSITORY_HOME"] + "/app")
-import main
+import app.main
 
 def test_ok():
-    response = main.lambda_handler(1, 2)
+    response = app.main.lambda_handler(1, 2)
 
     assert response["statusCode"] == 200
