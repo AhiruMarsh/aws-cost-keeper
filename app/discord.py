@@ -33,8 +33,8 @@ class Discord:
         }
 
         try:
-            result = requests.post(self._webhook_url, data)
+            r = requests.post(self._webhook_url, data)
         except requests.exceptions.RequestException as e:
             raise
         
-        return result
+        return r.status_code

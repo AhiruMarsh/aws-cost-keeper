@@ -35,7 +35,7 @@ def lambda_handler(event, context):
 
     response = webhook.send_text(notify_data)
     return {
-        "statusCode": response.status_code,
+        "statusCode": response,
         "body": json.dumps({
             "message": response,
         }),
