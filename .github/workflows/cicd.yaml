@@ -37,12 +37,12 @@ jobs:
         id: test
         continue-on-error: true
         run: |
-          pip install -r ../requirements.txt -q
-          pytest -v test_main.py
+          pip install -r requirements.txt -q
+          pytest -v tests/test_main.py
         env:
           AWS_BUDGET_NAME: "notify-aws-cost-CostBudget"
           DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL_TEST }}
-        working-directory: "./tests"
+        working-directory: "./"
 
       - name: Build
         id: build
