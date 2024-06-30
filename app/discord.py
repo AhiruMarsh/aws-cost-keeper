@@ -3,7 +3,7 @@ import random
 import requests
 
 class Discord:
-    def __init__(self, webhook_url: str, username: str, avatar_url: str):
+    def __init__(self, webhook_url: str, username: str, avatar_url: str = None):
         """ DiscordにWebhookでメッセージを飛ばすクラス （要: Webhook URL, BOT名, BOT画像） """
         self._webhook_url = webhook_url
         self._username    = username
