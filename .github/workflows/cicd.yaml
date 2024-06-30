@@ -49,7 +49,7 @@ jobs:
         if: steps.test.outcome == 'success'
         run: |
           pip install -r requirements.txt -q --target ./app
-          sam build --use-container --config-env ${CONFIG_ENV} --template-file ${TEMPLATE_FILE} --parameter-overrides DiscordWebhookURL=${DISCORD_WEBHOOK_URL}
+          sam build --use-container --template-file ${TEMPLATE_FILE} --parameter-overrides DiscordWebhookURL=${DISCORD_WEBHOOK_URL}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL_PRD }}
         working-directory: "./"
