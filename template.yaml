@@ -60,5 +60,15 @@ Resources:
           AutoAdjustType: HISTORICAL
           HistoricalOptions:
               BudgetAdjustmentPeriod: 6
-
-
+        CostTypes:
+          IncludeCredit: false
+          IncludeDiscount: true
+          IncludeOtherSubscription: true
+          IncludeRecurring: true
+          IncludeRefund: false
+          IncludeSubscription: true
+          IncludeSupport: true
+          IncludeTax: false
+          IncludeUpfront: false
+          UseAmortized: false
+          UseBlended: false
