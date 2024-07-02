@@ -53,9 +53,6 @@ Resources:
         BudgetName: !Sub "${ProjectName}-CostBudget"
         BudgetType: COST
         TimeUnit: MONTHLY
-        BudgetLimit:
-          Amount: 50
-          Unit: USD
         AutoAdjustData:
           AutoAdjustType: HISTORICAL
           HistoricalOptions:
