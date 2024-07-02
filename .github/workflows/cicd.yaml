@@ -58,6 +58,7 @@ jobs:
         if: steps.build.outcome == 'success'
         run: sam deploy --no-confirm-changeset --template-file ${TEMPLATE_FILE} --parameter-overrides DiscordWebhookURL=${DISCORD_WEBHOOK_URL}
         env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL_PRD }}
           AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
         working-directory: "./"
