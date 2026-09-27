@@ -14,9 +14,12 @@ locals {
   lambda_app_dir      = abspath("${path.module}/../../../app")
   lambda_src_dir      = "${local.lambda_app_dir}/src"
   lambda_requirements = "${local.lambda_app_dir}/requirements-lambda.txt"
-  lambda_build_dir    = abspath("${path.module}/.build")
-  lambda_package_dir  = "${local.lambda_build_dir}/package"
-  lambda_zip_path     = "${local.lambda_build_dir}/lambda.zip"
+  # stateに保存されるパスは相対パスにする
+  # (Terraform Cloud等ではRunごとに作業ディレクトリの絶対パスが変わり、毎回差分が出るため)
+  lambda_build_dir     = "${path.module}/.build"
+  lambda_zip_path      = "${local.lambda_build_dir}/lambda.zip"
+  lambda_build_abs_dir = abspath(local.lambda_build_dir)
+  lambda_package_dir   = "${local.lambda_build_abs_dir}/package"
 
   # ソースコード・依存関係・ランタイムから算出したハッシュ
   # zipファイル自体のハッシュではなく入力値から算出することで、
@@ -65,14 +68,15 @@ resource "aws_budgets_budget" "main" {
 # Lambda package (pip install + zip)
 # ----------------------------------------------------
 resource "terraform_data" "lambda_package" {
-  triggers_replace = [local.lambda_source_hash]
+  # zipはapply実行環境にしか存在しないため、パスが変わった場合も必ず再ビルドする
+  triggers_replace = [local.lambda_source_hash, local.lambda_zip_path]
   input            = local.lambda_zip_path
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<-EOT
       set -euo pipefail
-      rm -rf "${local.lambda_build_dir}"
+      rm -rf "${local.lambda_build_abs_dir}"
       mkdir -p "${local.lambda_package_dir}"
 
       python3 -m pip install \
@@ -90,7 +94,7 @@ resource "terraform_data" "lambda_package" {
       find "${local.lambda_package_dir}" -type d -name "__pycache__" -prune -exec rm -rf {} +
 
       cd "${local.lambda_package_dir}"
-      python3 -m zipfile -c "${local.lambda_zip_path}" .
+      python3 -m zipfile -c "${abspath(local.lambda_zip_path)}" .
     EOT
   }
 }
